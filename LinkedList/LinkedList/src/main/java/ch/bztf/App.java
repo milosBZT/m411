@@ -30,7 +30,7 @@ public final class App {
             ll.dumbAppend(i);
         }
         long end_time = System.nanoTime();
-        double duration = (end_time - start_time) / 1e9;  //divide by 1000000 to get milliseconds.
+        double duration = (end_time - start_time) / 1e9;  // time in seconds
 
         // ll.dumbAppend(45);
         // ll.dumbAppend(1245);
