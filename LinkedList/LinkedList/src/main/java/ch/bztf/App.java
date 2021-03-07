@@ -13,33 +13,60 @@ public final class App {
      */
     public static void main(String[] args)
     {
-        Node<Integer> node = new Node<Integer>(30);
+        LinkedList<User> ll = new LinkedList<User>();
+        // var ll = new LinkedList<Double>();
 
+        // ll.append(234.0);
+        // ll.append(354687.34);
+        // ll.append(12.0);
 
-        LinkedList<Integer> ll = new LinkedList<Integer>();
-
-        // ll.append(45);
-        // ll.append(1245);
-        // ll.append(76);
-        // ll.append(38475);
-
-        long start_time = System.nanoTime();
-
-        for (int i = 0; i < 1e6; ++i) {
-            // ll.append(i);
-            ll.dumbAppend(i);
-        }
-        long end_time = System.nanoTime();
-        double duration = (end_time - start_time) / 1e9;  // time in seconds
-
-        // ll.dumbAppend(45);
-        // ll.dumbAppend(1245);
-        // ll.dumbAppend(76);
-        // ll.dumbAppend(38475);
-
-
+        // var found = ll.find(234.0);
+        // System.out.println(found);
         // System.out.println(ll);
-        // System.out.println("linked list size: " + ll.size());
-        System.out.println("duration: " + duration + "s");
+
+        ll.append(new User("Richard", "Stallman"));
+        ll.append(new User("Larry", "Wall"));
+        ll.append(new User("Bjarne", "Stroustroup"));
+
+        var ken = new Node<User>(new User("Ken", "Thompson"));
+
+        ll.insert(ken, (User user) -> {
+            return user.last_name_.equals("Stroustroup");
+        });
+
+
+        ll.remove((User user) -> {
+            return user.last_name_.equals("Stroustroup");
+        });
+
+
+        var found = ll.find((User user) -> {
+            return user.name_.equals("Bjarne")
+                   && user.last_name_.equals("Stroustroup");
+        });
+
+
+        ll.append(new User("Howard", "Hinnant"));
+
+        // ll.setFindPrdicate_((User lhs, User rhs) -> {
+        //         return lhs.name_.equals(rhs.name_)
+        //                && lhs.last_name_.equals(rhs.last_name_);
+        //     }
+        // );
+
+        System.out.println("found node: " + found);
+
+        if (found != null) {
+            System.out.println("prev: " + found.prev());
+            System.out.println("next: " + found.next());    
+        }
+
+    //     // System.out.println("Linked list size: " + ll.size());
+        System.out.println(ll);
+    //     // System.out.println("linked list size: " + ll.size());
+    //     // System.out.println("duration: " + duration + "s");
+
+
+
     }
 }
