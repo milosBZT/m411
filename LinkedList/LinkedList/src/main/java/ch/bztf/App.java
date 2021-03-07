@@ -35,9 +35,9 @@ public final class App {
         });
 
 
-        ll.remove((User user) -> {
-            return user.last_name_.equals("Stroustroup");
-        });
+        // ll.remove((User user) -> {
+        //     return user.last_name_.equals("Stroustroup");
+        // });
 
 
         var found = ll.find((User user) -> {
@@ -47,6 +47,11 @@ public final class App {
 
 
         ll.append(new User("Howard", "Hinnant"));
+
+
+        ll.move(ken, (User user) -> {
+            return user.name_.equals("Richard");
+        });
 
         // ll.setFindPrdicate_((User lhs, User rhs) -> {
         //         return lhs.name_.equals(rhs.name_)

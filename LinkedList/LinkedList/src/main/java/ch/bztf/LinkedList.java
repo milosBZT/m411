@@ -93,7 +93,7 @@ public class LinkedList<T extends Comparable<T>>
     {
         var pos_node = find(value);
         if (pos_node != null) {
-            insert_(pos_node, node);
+            insert_(node, pos_node);
         } 
     }
 
@@ -107,7 +107,7 @@ public class LinkedList<T extends Comparable<T>>
     {
         var pos_node = find(fn);
         if (pos_node != null) {
-            insert_(pos_node, node);
+            insert_(node, pos_node);
         }
     }
 
@@ -116,7 +116,7 @@ public class LinkedList<T extends Comparable<T>>
      * 
      * @param found
      */
-    private void insert_(Node<T> found, Node<T> node)
+    private void insert_(Node<T> node, Node<T> found)
     {
         if (found == null) {
             return;
@@ -133,6 +133,20 @@ public class LinkedList<T extends Comparable<T>>
             last_node_ = node;
         }
 
+    }
+
+
+    /**
+     * Moves node to a new position.
+     * 
+     * @param node
+     * @param fn
+     */
+    public void move(Node<T> node_at, Function<T, Boolean> fn)
+    {
+        var node = find(fn);
+        insert_(node, node_at);
+        // remove_(node);
     }
 
 
