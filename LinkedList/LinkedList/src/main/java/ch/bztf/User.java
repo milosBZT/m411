@@ -7,16 +7,18 @@ public class User implements Comparable<User>
 {
     public String name_;
     public String last_name_;
+    int age_;
 
     /**
      * 
      * @param name
      * @param last_name
      */
-    User(String name, String last_name)
+    User(String name, String last_name, int age)
     {
         name_ = name;
         last_name_ = last_name;
+        age_ = age;
     }
 
 

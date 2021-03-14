@@ -1,81 +1,65 @@
 package ch.bztf;
 
+import java.util.Comparator;
+import java.util.function.Consumer;
+
 /**
  * Hello world!
  */
-public final class App {
-    private App() {
-    }
-
-    /**
-     * Says hello to the world.
-     * @param args The arguments of the program.
-     */
+public final class App
+{
+    private App() {}
     public static void main(String[] args)
     {
         LinkedList<User> ll = new LinkedList<User>();
-        // var ll = new LinkedList<Double>();
 
-        // ll.append(234.0);
-        // ll.append(354687.34);
-        // ll.append(12.0);
+        ll.append(new User("Richard", "Stallman", 67));
+        ll.append(new User("Larry", "Wall", 66));
+        ll.append(new User("Bjarne", "Stroustroup", 70));
 
-        // var found = ll.find(234.0);
-        // System.out.println(found);
-        // System.out.println(ll);
+        /**
+         * Implement homework for find() with predicate
+         */
+        var found = ll.find(user -> user.last_name_.equals("Stroustroup"));
+        System.out.println(
+            Colors.CYAN_BRIGHT
+            + "Found node with predicate: " + found
+            + Colors.RESET    
+        );
 
-        ll.append(new User("Richard", "Stallman"));
-        ll.append(new User("Larry", "Wall"));
-        ll.append(new User("Bjarne", "Stroustroup"));
+        /**
+         * Implement Homework for sorted append.
+         */
+        var comp = new Comparator<User>() {
+            @Override
+            public int compare(User lhs, User rhs) {
+                return lhs.last_name_.compareTo(rhs.last_name_);
+            }   
+        };
 
-        ll.insert(new User("Ken", "Thompson"), (User user) -> {
-            return user.last_name_.equals("Stroustroup");
-        });
-
-        // ll.remove((User user) -> {
-        //     return user.last_name_.equals("Stroustroup");
-        // });
-
-
-        var found = ll.find((User user) -> {
-            return user.name_.equals("Bjarne")
-                   && user.last_name_.equals("Stroustroup");
-        });
-
-
-        ll.append(new User("Howard", "Hinnant"));
-
-        var ken = ll.find((User user) -> { return user.name_.equals("Ken"); });
-
+        ll.sortedAppend(new User("Milos", "Poplasen", 31), comp);
         System.out.println(ll);
 
-        ll.move(ken, (User user) -> { return user.name_.equals("Howard"); });
+        /**
+         * Implement Homework fo consumer
+         */
+        var consumer = new Consumer<Node<User>>() {
+            public int net_age = 0;
+            public int n_users = 0;
 
-        ll.remove(new Node<User>(new User("Larry", "Wall")));
+            @Override
+            public void accept(Node<User> node) {
+                net_age += node.data().age_;
+                ++n_users;   
+            }
+        };
 
-
-
-
-        // var ken = new User("Ken", "Thompson");
-
-        // ll.setFindPrdicate_((User lhs, User rhs) -> {
-        //         return lhs.name_.equals(rhs.name_)
-        //                && lhs.last_name_.equals(rhs.last_name_);
-        //     }
-        // );
-
-        // System.out.println("found node: " + found);
-
-        // if (found != null) {
-        //     System.out.println("prev: " + found.prev());
-        //     System.out.println("next: " + found.next());    
-        // }
-
-    //     // System.out.println("Linked list size: " + ll.size());
-        System.out.println(ll);
-    //     // System.out.println("duration: " + duration + "s");
-
-
-
+        ll.forEach(consumer);
+        System.out.println(
+            Colors.GREEN_BRIGHT
+            + "\nmean age of users: "
+            + consumer.net_age / consumer.n_users
+            + Colors.RESET    
+        );
     }
 }

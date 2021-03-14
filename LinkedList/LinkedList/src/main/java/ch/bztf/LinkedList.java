@@ -1,4 +1,6 @@
 package ch.bztf;
+import java.util.Comparator;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
@@ -48,6 +50,79 @@ public class LinkedList<T extends Comparable<T>>
 
 
     /**
+     * Inserts element at position found by provided
+     * comparator object.
+     * 
+     * @param value
+     * @param comp
+     */
+     public void sortedAppend(T value, Comparator<T> comp)
+    {
+        Node<T> node_at = null;
+        for (var node = begin_node_; node != null; node = node.next()) {
+            if (comp.compare(value, node.data()) < 0) {
+                node_at = node;
+                break;
+            }
+        }
+
+        if (node_at != null) {
+            swap(insert(value, node_at), node_at);
+        } else {
+            append(value);
+        }
+    }
+
+
+    /**
+     * 
+     * @param l
+     * @param r
+     */
+    public void swap(Node<T> l, Node<T> r)
+    {
+        var tmp = new Node<T>(l.data());
+        tmp.setPrev(l.prev());
+        tmp.setNext(l.next());
+
+        if (l == begin_node_) {
+            begin_node_ = r;
+        }
+        else if (r == begin_node_) {
+            begin_node_ = l;
+        }
+    
+        if (l == last_node_) {
+            last_node_ = r;
+        }
+        else if (r == last_node_) {
+            last_node_ = l;
+        }
+
+        if (r.prev() != null) {
+            r.prev().setNext(l);
+        }
+
+        if (r.next() != null) {
+            r.next().setPrev(l);
+        }
+
+        if (tmp.next() != null) {
+            tmp.next().setPrev(r);
+        }
+
+        if (tmp.prev() != null) {
+            tmp.prev().setNext(r);
+        }
+
+        l.setNext(r.next());
+        l.setPrev(r.prev());
+        r.setNext(tmp.next());
+        r.setPrev(tmp.prev());
+    }
+
+
+    /**
      * Finds a node by means of applying provided callback
      * to each element of list.
      * 
@@ -87,12 +162,15 @@ public class LinkedList<T extends Comparable<T>>
      * @param pos
      * @param value
      */
-    public void insert(T value, Node<T> node_at)
+    public Node<T> insert(T value, Node<T> node_at)
     {
         var node = new Node<T>(value);
         if (node_at != null) {
             insert_(node, node_at);
-        } 
+            return node;
+        } else {
+            return null;
+        }
     }
 
 
@@ -189,8 +267,34 @@ public class LinkedList<T extends Comparable<T>>
             node.prev().setNext(node.next());
             node.next().setPrev(node.prev());
         }
-
         --size_;
+    }
+
+
+    /**
+     * Provides convenience looping through node elements.
+     * 
+     * @param fn callback to apply on each element
+     */
+     public void forEach(Consumer<Node<T>> fn)
+    {
+        for (Node<T> n = begin_node_; n != null; n = n.next()) {
+            fn.accept(n);
+        }
+    }
+
+
+    /**
+     * Provides convenience looping through node elements.
+     * 
+     * @param <U>
+     * @param fn callback to apply on each element
+     */
+    public <U> void forEach(Function<Node<T>, U> fn)
+    {
+        for (Node<T> n = begin_node_; n != null; n = n.next()) {
+            fn.apply(n);
+        }
     }
 
 
@@ -200,7 +304,12 @@ public class LinkedList<T extends Comparable<T>>
     public String toString()
     {
         var color = Colors.YELLOW_BOLD;
-        String s = Colors.WHITE_BOLD + "linked list size: " + color + size_ + "\n";
+        String s = Colors.WHITE_BOLD + "\nDumping linked list: "
+                   + color
+                   + "0x" + Integer.toHexString(System.identityHashCode(this))
+                   + "\n";
+
+        s += Colors.WHITE_BOLD + "linked list size: " + color + size_ + "\n";
         s += Colors.WHITE_BOLD + "linked list content: {\n    ";
         Node<T> begin = begin_node_;
         int c = 0;
