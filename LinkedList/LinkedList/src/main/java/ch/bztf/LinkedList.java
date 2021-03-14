@@ -1,7 +1,4 @@
 package ch.bztf;
-
-import java.util.function.BiFunction;
-import java.util.function.BiPredicate;
 import java.util.function.Function;
 
 /**
@@ -73,10 +70,11 @@ public class LinkedList<T extends Comparable<T>>
      * @param value
      * @return
      */
-    public Node<T> find(T value)
+    public Node<T> find(Node<T> node)
     {
         for (Node<T> n = begin_node_; n != null; n = n.next()) {
-            if (n.data().equals(value)) {
+            if (n.equals(node)) {
+                System.out.println("found: " + n.data());
                 return n;
             }
         }
@@ -89,11 +87,11 @@ public class LinkedList<T extends Comparable<T>>
      * @param pos
      * @param value
      */
-    public void insert(T value, Node<T> node)
+    public void insert(T value, Node<T> node_at)
     {
-        var pos_node = find(value);
-        if (pos_node != null) {
-            insert_(node, pos_node);
+        var node = new Node<T>(value);
+        if (node_at != null) {
+            insert_(node, node_at);
         } 
     }
 
@@ -101,10 +99,11 @@ public class LinkedList<T extends Comparable<T>>
     /**
      * 
      * @param pos_node
-     * @param node
+     * @param value
      */
-    public void insert(Node<T> node, Function<T, Boolean> fn)
+    public void insert(T value, Function<T, Boolean> fn)
     {
+        var node = new Node<T>(value);
         var pos_node = find(fn);
         if (pos_node != null) {
             insert_(node, pos_node);
@@ -114,17 +113,17 @@ public class LinkedList<T extends Comparable<T>>
     /**
      * Implements core method for inserting node 
      * 
-     * @param found
+     * @param node_at
      */
-    private void insert_(Node<T> node, Node<T> found)
+    private void insert_(Node<T> node, Node<T> node_at)
     {
-        if (found == null) {
+        if (node_at == null) {
             return;
         }
- 
-        var next = found.next();
-        found.setNext(node);
-        node.setPrev(found);
+
+        var next = node_at.next();
+        node_at.setNext(node);
+        node.setPrev(node_at);
         node.setNext(next);
 
         if (next != null) {
@@ -133,6 +132,7 @@ public class LinkedList<T extends Comparable<T>>
             last_node_ = node;
         }
 
+        ++size_;
     }
 
 
@@ -142,11 +142,11 @@ public class LinkedList<T extends Comparable<T>>
      * @param node
      * @param fn
      */
-    public void move(Node<T> node_at, Function<T, Boolean> fn)
+    public void move(Node<T> node, Function<T, Boolean> fn)
     {
-        var node = find(fn);
-        insert_(node, node_at);
-        // remove_(node);
+        var node_at = find(fn);
+        insert(node.data(), node_at);
+        remove_(node);
     }
 
 
@@ -154,9 +154,9 @@ public class LinkedList<T extends Comparable<T>>
      * 
      * @param value
      */
-    public void remove(T value)
+    public void remove(Node<T> target_node)
     {
-        var node = find(value);
+        var node = find(target_node);
         if (node != null) {
             remove_(node);
         }
@@ -189,20 +189,33 @@ public class LinkedList<T extends Comparable<T>>
             node.prev().setNext(node.next());
             node.next().setPrev(node.prev());
         }
+
+        --size_;
     }
 
+
     /**
-     * 
+     * Dump nicely formatted linked list information and content
      */
-    public String toString() {
-        String s = "";
+    public String toString()
+    {
+        var color = Colors.YELLOW_BOLD;
+        String s = Colors.WHITE_BOLD + "linked list size: " + color + size_ + "\n";
+        s += Colors.WHITE_BOLD + "linked list content: {\n    ";
         Node<T> begin = begin_node_;
+        int c = 0;
+
         while (begin != null) {
-            s += begin.toString() + ", ";
+            // print 4 elements in one row
+            if (c != 0 && c % 4 == 0) {
+                s += color + "\n    ";
+            }
+            s += color + begin.toString() + Colors.RESET + ", ";
             begin = begin.next();
+            ++c;
         }
 
-        return s.substring(0, s.lastIndexOf(','));
+        return s.substring(0, s.lastIndexOf(',')) + Colors.RESET + "\n}";
     }
 
 

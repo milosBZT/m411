@@ -28,12 +28,9 @@ public final class App {
         ll.append(new User("Larry", "Wall"));
         ll.append(new User("Bjarne", "Stroustroup"));
 
-        var ken = new Node<User>(new User("Ken", "Thompson"));
-
-        ll.insert(ken, (User user) -> {
+        ll.insert(new User("Ken", "Thompson"), (User user) -> {
             return user.last_name_.equals("Stroustroup");
         });
-
 
         // ll.remove((User user) -> {
         //     return user.last_name_.equals("Stroustroup");
@@ -48,10 +45,18 @@ public final class App {
 
         ll.append(new User("Howard", "Hinnant"));
 
+        var ken = ll.find((User user) -> { return user.name_.equals("Ken"); });
 
-        ll.move(ken, (User user) -> {
-            return user.name_.equals("Richard");
-        });
+        System.out.println(ll);
+
+        ll.move(ken, (User user) -> { return user.name_.equals("Howard"); });
+
+        ll.remove(new Node<User>(new User("Larry", "Wall")));
+
+
+
+
+        // var ken = new User("Ken", "Thompson");
 
         // ll.setFindPrdicate_((User lhs, User rhs) -> {
         //         return lhs.name_.equals(rhs.name_)
@@ -59,16 +64,15 @@ public final class App {
         //     }
         // );
 
-        System.out.println("found node: " + found);
+        // System.out.println("found node: " + found);
 
-        if (found != null) {
-            System.out.println("prev: " + found.prev());
-            System.out.println("next: " + found.next());    
-        }
+        // if (found != null) {
+        //     System.out.println("prev: " + found.prev());
+        //     System.out.println("next: " + found.next());    
+        // }
 
     //     // System.out.println("Linked list size: " + ll.size());
         System.out.println(ll);
-    //     // System.out.println("linked list size: " + ll.size());
     //     // System.out.println("duration: " + duration + "s");
 
 
