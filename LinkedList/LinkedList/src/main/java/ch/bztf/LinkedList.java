@@ -31,21 +31,25 @@ public class LinkedList<T extends Comparable<T>>
 
     /**
      * 
+     * Fuege neue Objekte in die LinkedList ein. Passe dabei immer die
+     * tail node an um das ende zu wissen und schnelle appends zu machen.
+     * 
      * @param value
      */
     public void append(T value) {
         Node<T> node = new Node<T>(value);
 
+        // wenn die liste noch leer ist.
         if (begin_node_ == null && last_node_ == null) {
             begin_node_ = node;
             last_node_ = node;
         }
 
-        last_node_.setNext(node);
-        node.setPrev(last_node_);
-        last_node_ = node;
-        last_node_.setNext(null);
-        ++size_;
+        last_node_.setNext(node); // fuege unser objekt am schluss ein
+        node.setPrev(last_node_); // setze als vorherige node die alte tail node
+        last_node_ = node; // setze uns ans ende
+        last_node_.setNext(null); // setze den next pointer auf null
+        ++size_; // update groesse der liste
     }
 
 
@@ -315,8 +319,8 @@ public class LinkedList<T extends Comparable<T>>
         int c = 0;
 
         while (begin != null) {
-            // print 4 elements in one row
-            if (c != 0 && c % 4 == 0) {
+            // print 1 elements in one row
+            if (c != 0 && c % 1 == 0) {
                 s += color + "\n    ";
             }
             s += color + begin.toString() + Colors.RESET + ", ";

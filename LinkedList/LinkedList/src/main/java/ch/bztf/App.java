@@ -1,5 +1,7 @@
 package ch.bztf;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.function.Consumer;
 
@@ -11,55 +13,30 @@ public final class App
     private App() {}
     public static void main(String[] args)
     {
-        LinkedList<User> ll = new LinkedList<User>();
-
-        ll.append(new User("Richard", "Stallman", 67));
-        ll.append(new User("Larry", "Wall", 66));
-        ll.append(new User("Bjarne", "Stroustroup", 70));
-
         /**
-         * Implement homework for find() with predicate
+         * @Erklaerung der Aufgabe:
+         * 
+         * Es wurde eine LinkedList als datenstrukture gewaehlt. Es wurde kein simples
+         * Array gewaehlt, weil die Schuelerlist sowieso nicht eine gewisse Anzahl ueberschreitet,
+         * welche die linked list langsam machen wuerde. Zusaetlich ist es dadurch moeglich schueler
+         * leicht aus der Liste zu loeschen und neue einzufuegen oder eine beliebige anzahl anzuhaengen.
+         * 
          */
-        var found = ll.find(user -> user.last_name_.equals("Stroustroup"));
-        System.out.println(
-            Colors.CYAN_BRIGHT
-            + "Found node with predicate: " + found
-            + Colors.RESET    
-        );
 
-        /**
-         * Implement Homework for sorted append.
-         */
-        var comp = new Comparator<User>() {
-            @Override
-            public int compare(User lhs, User rhs) {
-                return lhs.last_name_.compareTo(rhs.last_name_);
-            }   
-        };
+        LinkedList<Student> ll = new LinkedList<Student>();
 
-        ll.sortedAppend(new User("Milos", "Poplasen", 31), comp);
+        try {
+            /**
+             * Befuelle die linked list mit schuelern im try block weil eine
+             * exception geworfen wird wenn nicht genau 5 noten angebeben wurden.
+             */
+            ll.append(new Student("Max Muster", "Sek 3a", new ArrayList<Double>(Arrays.asList(5.0, 4.5, 3.0, 4.8, 5.2))));
+            ll.append(new Student("Doris Pfister", "Sek 2a", new ArrayList<Double>(Arrays.asList(6.0, 5.5, 5.0, 4.5, 5.0))));
+            ll.append(new Student("Mia Zuber", "Sek 3a", new ArrayList<Double>(Arrays.asList(3.0, 5.0, 5.0, 4.5, 3.5))));           
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
         System.out.println(ll);
-
-        /**
-         * Implement Homework fo consumer
-         */
-        var consumer = new Consumer<Node<User>>() {
-            public int net_age = 0;
-            public int n_users = 0;
-
-            @Override
-            public void accept(Node<User> node) {
-                net_age += node.data().age_;
-                ++n_users;   
-            }
-        };
-
-        ll.forEach(consumer);
-        System.out.println(
-            Colors.GREEN_BRIGHT
-            + "\nmean age of users: "
-            + consumer.net_age / consumer.n_users
-            + Colors.RESET    
-        );
     }
 }
